@@ -1,3 +1,4 @@
+from PySide2.QtWidgets import QApplication,QMessageBox
 from winotify import Notification
 from importlib import reload
 import datetime
@@ -5,19 +6,6 @@ import time
 import getpass
 import threading
 import gazu
-import update
-reload(update)
-
-def daily_morning_notify():
-    print("Good morning!")
-
-def daily_afternoon_notify():
-    print("Good Afternoon!")
-
-def run_thread(func,hour,minute):
-    while True:
-        now = time.localtime()
-
 
 def notify():
 
@@ -54,16 +42,39 @@ def notify():
 
 def timer():
     # 获取当前时间
-    while True:
-        now = datetime.datetime.now()
-        hour = now.hour
-        minute = now.minute
+    # while True:
+    #     now = datetime.datetime.now()
+    #     hour = now.hour
+    #     minute = now.minute
+    #
+    #     if hour == 15:  # 判断当前时间是否超过下午3点
+    #         if minute >= 0 and minute<=10 :
+    #             time.sleep(30)
+    #             notify()
+    #     else:
+    #         print(f"Current Time: {now},Connecting...")
+    #         time.sleep(60)
+    ## update
+    git = 'https://github.com/anuos123/task_notify.git'
 
-        if hour == 15:  # 判断当前时间是否超过下午3点
-            if minute >= 0 and minute<=10 :
-                time.sleep(30)
-                notify()
-        else:
-            print(f"Current Time: {now},Connecting...")
-            time.sleep(60)
+    import requests
+
+    owner = 'anuos123'
+    repo = 'task_notify'
+    repo_url = f'https://api.github.com/repos/{owner}/{repo}/tags'
+    response = requests.get(repo_url.format(owner=owner, repo=repo))
+
+    if response.status_code == 200:
+        tags = response.json()
+        for tag in tags:
+            print(tag['name'])
+    else:
+        print('Failed to retrieve tags')
+
+    # # 创建一个带有“问题”图标的问题对话框
+    # reply = QMessageBox.question(None, "标题", "这是一个问题对话框。", QMessageBox.Yes | QMessageBox.No)
+    # if reply == QMessageBox.Yes:
+    #     print("用户点击了“Yes”按钮。")
+    # else:
+    #     print("用户点击了“No”按钮。")
 timer()
